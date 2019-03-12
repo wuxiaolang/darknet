@@ -1,4 +1,5 @@
 # YOLO 批量处理数据集并保存检测结果
+![](https://github.com/wuxiaolang/darknet/blob/master/gif/yolo_tum.gif?raw=true)
 ## 0. 主要工作：
 + 在 [**darknet.c**](https://github.com/wuxiaolang/darknet/blob/master/examples/darknet.c?1552372879559) 中添加了 `detect_tum_batch` 命令；
 + 在 [**detector.c**](https://github.com/wuxiaolang/darknet/blob/master/examples/detector.c?1552372948327) 中添加了**读取数据集图片**的函数 `test_detector_tum_batch()`；
