@@ -1,8 +1,8 @@
 # YOLO 批量处理数据集并保存检测结果
 ## 0. 主要工作：
-+ 在 `darknet.c` 中添加了 `detect_tum_batch` 命令；
-+ 在 `detector.c` 中添加了读取数据集图片的函数 `test_detector_tum_batch()`；
-+ 在 `image.c` 中添加了绘制与保存结果的函数 `draw_save_detections()`。
++ 在 [**darknet.c**](https://github.com/wuxiaolang/darknet/blob/master/examples/darknet.c?1552372879559) 中添加了 `detect_tum_batch` 命令；
++ 在 [**detector.c**](https://github.com/wuxiaolang/darknet/blob/master/examples/detector.c?1552372948327) 中添加了**读取数据集图片**的函数 `test_detector_tum_batch()`；
++ 在 [**image.c**](https://github.com/wuxiaolang/darknet/blob/master/src/image.c?1552373025166) 中添加了绘制与**保存结果**的函数 `draw_save_detections()`。
 + 代码：[**https://github.com/wuxiaolang/darknet**](https://github.com/wuxiaolang/darknet)
 
 ## 1. 指令与效果
