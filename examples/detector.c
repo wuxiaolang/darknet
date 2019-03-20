@@ -699,7 +699,7 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
         // NOTE 输出图片.
         strncpy(output_file, output_folder, 256);
         char frame_index_c3[256];
-        sprintf(frame_index_c3,"/yolo_img/%04d_yolo_%.2f",img_counter,thresh);  // format into 6 digit
+        sprintf(frame_index_c3,"/yolo_imgs/%04d_yolo_%.2f",img_counter,thresh);  // format into 6 digit
         char * result_img = strcat(output_file,frame_index_c3);
 
         fclose(fp);

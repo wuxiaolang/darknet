@@ -15,13 +15,13 @@
 ```
 ./darknet detect_tum_batch cfg/yolov3.cfg yolov3.weights /home/wu/data/dataset/rgbd_dataset_freiburg1_desk/ /home/wu/data/ -thresh 0.4
 ```
-&emsp;&emsp;注意：请在 [output_folder] 下创建 `yolo_img` 和 `yolo_txt` 文件夹来存放绘制了检测框的图片和检测框 txt 信息。
+&emsp;&emsp;注意：请在 [output_folder] 下创建 `yolo_imgs` 和 `yolo_txts` 文件夹来存放绘制了检测框的图片和检测框 txt 信息。
 
-+ **其他数据集**：可仿照下面的函数写，后续用到的时候再添加其他数据集命令。
++ **其他数据集**：可仿照改动的函数写，后续用到的时候再添加其他数据集命令。
 
 ## 2. 结果
-+ 输出的图片保存在 `output_folder/yolo_img` 路径下；
-+ 输出的图片保存在 `output_folder/yolo_txt` 路径下；
++ 输出的图片保存在 `output_folder/yolo_imgs` 路径下；
++ 输出的图片保存在 `output_folder/yolo_txts` 路径下；
 + txt 保存格式（可修改）：类别  左上角.x 左上角.y 长 宽 置信度
 ```
     book	450	110	189	253	0.50
