@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "utils.h": "c",
+        "image.h": "c",
+        "darknet.h": "c",
+        "improcess.h": "c",
+        "iostream": "c",
+        "opencv.hpp": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.dimInactiveRegions": false
+}
