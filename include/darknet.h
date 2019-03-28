@@ -586,6 +586,8 @@ typedef struct{
 
 network *load_network(char *cfg, char *weights, int clear);
 load_args get_base_args(network *net);
+// NOTE 间接获取网络各层信息. WU
+layer get_layer(network *net, int num);
 
 void free_data(data d);
 
