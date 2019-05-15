@@ -704,7 +704,7 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
         strncpy(output_file, output_folder, 256);
         char frame_index_c3[256];
         //sprintf(frame_index_c3,"/yolo_imgs/%04d_yolo_%.2f",img_counter,thresh);  // format into 6 digit
-        sprintf(frame_index_c3,"yolo_imgs/%s.png",img_name);  // 0001_yolo2_0.50.txt
+        sprintf(frame_index_c3,"yolo_imgs/%s",img_name);  // 0001_yolo2_0.50.txt
 
         char * result_img = strcat(output_file,frame_index_c3);
 

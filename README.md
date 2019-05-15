@@ -21,16 +21,16 @@
 + **其他数据集**：可仿照改动的函数写，后续用到的时候再添加其他数据集命令。
 
 ## 2. 结果
-+ 输出的图片保存在 `output_folder/yolo_imgs` 路径下；
-+ 输出的图片保存在 `output_folder/yolo_txts` 路径下；
-+ txt 保存格式（可修改）：类别  左上角.x 左上角.y 长 宽 置信度
-```
-    book	450	110	189	253	0.50
-keyboard	70	294	260	185	0.79
-    mouse	255	258	63	38	0.81
-    laptop	3	46	238	310	0.41
-tvmonitor	224	0	243	234	0.61
-```
++ **以下所有的输出格式、内容可以在 `detector.c` 的 `test_detector_tum_batch()` 函数中修改。**
++ 输出的图片保存在 `output_folder/yolo_imgs` 路径下，文件名为：`[时间戳].jpg`，例如 `1905140001.223000.jpg`；
++ 输出的 txt 文件保存在 `output_folder/yolo_txts` 路径下，文件名为：`[时间戳].txt`，例如 `1905140001.223000.txt`；
++ txt 保存格式：类别 ID &emsp; 左上角.x &emsp; 左上角.y &emsp; 长 &emsp; 宽 &emsp; [置信度]
+    ```
+    66 526 244 113 137
+    63 27 0 503 414
+    60 0 63 580 383
+    ```
+
 ## YOLO
 + 官网：https://pjreddie.com/darknet/yolo/
 + github：https://github.com/pjreddie/darknet
@@ -38,3 +38,4 @@ tvmonitor	224	0	243	234	0.61
 ---
 > 2019.03.11    
 wuyanminmax@gmail.com
+
