@@ -609,9 +609,9 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
     strncpy(rgb_txt_path, input_folder, 256); // input_folder 还是 ~/dataset/rgbd_dataset_freiburg3_long_office_household/
     FILE *fp_rgb_txt = fopen(strcat(rgb_txt_path,"rgb.txt"), "r");
 
-    char buff2[256];
+    char buff2[256]= {0};
     char *img_name = buff2;
-    char buff3[256];
+    char buff3[256]= {0};
     char *input_img_name = buff3;
 
     char szTest[256] = {0};
@@ -630,9 +630,10 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
         if( img_counter < 0)
             continue;
 
-        strncpy(img_name, szTest+18, 25);               // 每行前面 18位为时间戳，后面是文件名.
+        strncpy(img_name, szTest+22, 17);               // 每行前面 18位为时间戳，后面是文件名.
 
-        sprintf(input_img_name, "%s%s", input_folder, img_name);
+        sprintf(input_img_name, "%srgb/%s.png", input_folder, img_name);
+        printf("文件名： %s\n", input_img_name);
 
         // NOTE 输出txt存放的文件夹.
         char buff7[256];
@@ -641,9 +642,12 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
 
         // txt 结果文件.
         char frame_index_c2[256];
-        sprintf(frame_index_c2,"yolo_txts/%04d_yolo_%.2f.txt",img_counter,thresh);  // 0001_yolo2_0.50.txt
+        //sprintf(frame_index_c2,"yolo_txts/%04d_yolo_%.2f.txt",img_counter,thresh);  // 0001_yolo2_0.50.txt
+        sprintf(frame_index_c2,"yolo_txts/%s.txt",img_name);  // 0001_yolo2_0.50.txt
+
         // 路径+文件名.
         char *result_file = strcat(output_file,frame_index_c2);
+        printf("save to file %s \n",result_file);
 
         // 读写文档.
         fp = fopen(result_file,"w+");
@@ -699,7 +703,9 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
         // NOTE 输出图片.
         strncpy(output_file, output_folder, 256);
         char frame_index_c3[256];
-        sprintf(frame_index_c3,"/yolo_imgs/%04d_yolo_%.2f",img_counter,thresh);  // format into 6 digit
+        //sprintf(frame_index_c3,"/yolo_imgs/%04d_yolo_%.2f",img_counter,thresh);  // format into 6 digit
+        sprintf(frame_index_c3,"yolo_imgs/%s.png",img_name);  // 0001_yolo2_0.50.txt
+
         char * result_img = strcat(output_file,frame_index_c3);
 
         fclose(fp);

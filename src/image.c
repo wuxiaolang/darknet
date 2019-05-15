@@ -316,7 +316,8 @@ void draw_save_detections(  image im,
             if(bot > im.h-1) bot = im.h-1;
             
             // NOTE 分别写入类别和坐标
-            fprintf(save_txt,"%s\t%d\t%d\t%d\t%d\t%.2f\n", names[class], left, top, right-left, bot-top, dets[i].prob[class]);
+            //fprintf(save_txt,"%s\t%d\t%d\t%d\t%d\t%.2f\n", names[class], left, top, right-left, bot-top, dets[i].prob[class]);
+            fprintf(save_txt,"%d %d %d %d %d\n", class, left, top, right-left, bot-top);
             printf("left, top, right, bot：%d %d %d %d\n", left, top, right, bot);
 
             // 绘制边框.
