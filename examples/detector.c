@@ -643,7 +643,7 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
         // txt 结果文件.
         char frame_index_c2[256];
         //sprintf(frame_index_c2,"yolo_txts/%04d_yolo_%.2f.txt",img_counter,thresh);  // 0001_yolo2_0.50.txt
-        sprintf(frame_index_c2,"yolo_txts/%s.txt",img_name);  // 0001_yolo2_0.50.txt
+        sprintf(frame_index_c2,"yolo_txts/%s.txt",img_name);  // 时间戳.txt
 
         // 路径+文件名.
         char *result_file = strcat(output_file,frame_index_c2);
@@ -703,8 +703,8 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
         // NOTE 输出图片.
         strncpy(output_file, output_folder, 256);
         char frame_index_c3[256];
-        //sprintf(frame_index_c3,"/yolo_imgs/%04d_yolo_%.2f",img_counter,thresh);  // format into 6 digit
-        sprintf(frame_index_c3,"yolo_imgs/%s",img_name);  // 0001_yolo2_0.50.txt
+        //sprintf(frame_index_c3,"/yolo_imgs/%04d_yolo_%.2f",img_counter,thresh);  // 0001_yolo2_0.50.txt
+        sprintf(frame_index_c3,"yolo_imgs/%s",img_name);  // 1905140001.223000.txt
 
         char * result_img = strcat(output_file,frame_index_c3);
 

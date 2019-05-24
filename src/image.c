@@ -315,10 +315,10 @@ void draw_save_detections(  image im,
             if(top < 0) top = 0;
             if(bot > im.h-1) bot = im.h-1;
             
-            // NOTE 分别写入类别和坐标
+            // NOTE 分别写入类别 ID 、坐标和置信度.
             //fprintf(save_txt,"%s\t%d\t%d\t%d\t%d\t%.2f\n", names[class], left, top, right-left, bot-top, dets[i].prob[class]);
-            fprintf(save_txt,"%d %d %d %d %d\n", class, left, top, right-left, bot-top);
-            printf("left, top, right, bot：%d %d %d %d\n", left, top, right, bot);
+            fprintf(save_txt,"%d %d %d %d %d %f\n", class, left, top, right-left, bot-top, dets[i].prob[class]);
+            printf("left, top, right, bot：%d %d %d %d %f\n", left, top, right, bot, dets[i].prob[class]);
 
             // 绘制边框.
             draw_box_width(im, left, top, right, bot, width, red, green, blue);
