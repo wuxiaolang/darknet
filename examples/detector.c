@@ -801,6 +801,8 @@ void test_detector_kitti_batch(   char *datacfg,      /* cfg/coco.data */
         sprintf(input_img_name, "%simage_2/%06d.png", input_folder, num);   // color image_2，gray image_0
         printf("输入文件名： %s\n", input_img_name);
 
+	// memset(szTest, 0, sizeof(szTest));
+	// fgets(szTest, sizeof(szTest) - 1, fp_rgb_txt); // 包含了换行符
         // STEP 2. 确定输出文件名
         // 【方法 ①】： 以序号命名
         // 以序号命名文件.
@@ -808,8 +810,6 @@ void test_detector_kitti_batch(   char *datacfg,      /* cfg/coco.data */
         sprintf(output_file_name, "%06d", num);
         // // 【方法 ②】： 以时间戳命名
         // // 逐行读取 txt 文件的时间戳：1.036224e-01.
-		// memset(szTest, 0, sizeof(szTest));
-		// fgets(szTest, sizeof(szTest) - 1, fp_rgb_txt); // 包含了换行符
         // strncpy(output_file_name, szTest, 12);
         // // 将时间戳转换成十进制
         // double tmp_name = strtod(output_file_name, NULL);   // note strtod() 转换成 lf 十进制类型.
