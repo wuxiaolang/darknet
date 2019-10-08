@@ -279,6 +279,9 @@ void draw_save_detections(  image im,
             // NOTE 只筛选出 "cup" 和 "bottle" 类别.
             // if ((strcmp(names[class], "cup") != 0)&&(strcmp(names[class], "bottle") != 0))
             //     {continue;}
+            // 只选出 car.
+            // if (strcmp(names[class], "car") != 0)
+            //     continue;
 
             int width = im.h * .006;
 

@@ -646,7 +646,7 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
         sprintf(frame_index_c2,"yolo_txts/%s.txt",img_name);  // 时间戳.txt
 
         // 路径+文件名.
-        char *result_file = strcat(output_file,frame_index_c2);
+        char * result_file = strcat(output_file,frame_index_c2);
         printf("save to file %s \n",result_file);
 
         // 读写文档.
@@ -730,6 +730,187 @@ void test_detector_tum_batch(   char *datacfg,      /* cfg/coco.data */
     }
 	fclose(fp_rgb_txt);
 }
+
+// BRIEF 批量检测 kitti 数据集.
+// note kitti 数据集图像文件名按照序号来命名的 000000 开始，时间戳用科学计数法表示的存储在 txt 文件中
+// 可以有两种选择，一是把输出的检测结果也以序号命名，二是以时间戳命名转换成非科学计数法.
+void test_detector_kitti_batch(   char *datacfg,      /* cfg/coco.data */
+                            char *cfgfile,      /* 网络模型 */
+                            char *weightfile,   /* 权重文件 */
+                            char *input_folder, /* 输入数据集路径 */
+                            char *output_folder,/* 输出结果保存路径 */
+                            float thresh,       /* 置信度阈值 */
+                            float hier_thresh)
+{
+    if( !input_folder ){
+	printf("Please Provide Input Image Folder...\n");
+	return;
+    }
+    if( !output_folder ){
+	printf("Please Provide Output Image Folder...\n");
+	return;
+    }
+
+    // 解析 datacfg（默认为 coco.data）文件
+    list *options = read_data_cfg(datacfg);
+    // 判断 options 中是否含有 names 信息（data/coco.names），否则默认为 data/names.list
+    char *name_list = option_find_str(options, "names", "data/names.list");
+    // 获取类别名称.
+    char **names = get_labels(name_list);
+
+    // 用于显示的标签字符.
+    image **alphabet = load_alphabet();
+    // 读取网络结构，并分配权重，net包含整个网络的信息.
+    network *net = load_network(cfgfile, weightfile, 0);
+    // 将 batch 数目设置为 1，不用于训练过程，一次检测一张图片.
+    set_batch_network(net, 1);
+
+    srand(2222222);
+    double time;
+
+    // 非极大值抑制.
+    float nms=.45;
+
+    // NOTE 创建 txt 文档.
+    FILE *fp;
+
+    // NOTE 读取时间戳文件 times.txt   ~/dataset/kitti/color/07/times.txt
+    char buff[256];
+    char *rgb_txt_path = buff;
+    strncpy(rgb_txt_path, input_folder, 256); // input_folder ~/dataset/kitti/color/07/
+    FILE *fp_rgb_txt = fopen(strcat(rgb_txt_path,"times.txt"), "r");
+
+    char buff2[256]= {0};
+    char *output_file_name = buff2;         // 图像文件名
+    char buff3[256]= {0};
+    char *input_img_name = buff3;   // 图像文件路径.
+
+    char szTest[256] = {0};
+    if(NULL == fp_rgb_txt)
+	{
+		printf("failed to open dos.txt\n");
+	}
+
+    int num = -1;
+	while(!feof(fp_rgb_txt))
+	{
+        num ++;
+
+        // STEP 1. 得到输入文件
+        // 读取输入的图像文件：~/color/21/image_2/000001.png
+        sprintf(input_img_name, "%simage_2/%06d.png", input_folder, num);   // color image_2，gray image_0
+        printf("输入文件名： %s\n", input_img_name);
+
+        // STEP 2. 确定输出文件名
+        // 【方法 ①】： 以序号命名
+        // 以序号命名文件.
+        printf("文件序号： %06d\n", num);
+        sprintf(output_file_name, "%06d", num);
+        // // 【方法 ②】： 以时间戳命名
+        // // 逐行读取 txt 文件的时间戳：1.036224e-01.
+		// memset(szTest, 0, sizeof(szTest));
+		// fgets(szTest, sizeof(szTest) - 1, fp_rgb_txt); // 包含了换行符
+        // strncpy(output_file_name, szTest, 12);
+        // // 将时间戳转换成十进制
+        // double tmp_name = strtod(output_file_name, NULL);   // note strtod() 转换成 lf 十进制类型.
+        // // 保留 5 位小数.（在 ORB_SLAM2 中 kitti 数据集小数点后 5 位）
+        // sprintf(output_file_name, "%.5lf", tmp_name);
+
+        // NOTE 输出txt存放的文件夹.
+        char buff7[256];
+        char *output_file = buff7;
+        strncpy(output_file, output_folder, 256);
+
+        // txt 结果文件.
+        char frame_index_c2[256];
+        //sprintf(frame_index_c2,"yolo_txts/%04d_yolo_%.2f.txt",img_counter,thresh);  // 0001_yolo2_0.50.txt
+        sprintf(frame_index_c2,"yolo_txts/%s.txt",output_file_name);  // 时间戳.txt
+
+        // 路径+文件名.
+        char * result_file = strcat(output_file, frame_index_c2);
+        printf("save to file %s \n",result_file);
+
+        // 读写文档.
+        fp = fopen(result_file,"w+");
+        if (fp == NULL)
+        {
+            printf("Cannot save to file %s \n",result_file);
+            break;
+        }
+
+        // 读取一张图片，input_img_name为图片地址
+        // 对图片进行resize，resize 成网络输入大小.
+        image im = load_image_color(input_img_name,0,0);
+        image sized = letterbox_image(im, net->w, net->h);
+        //image sized = resize_image(im, net->w, net->h);
+        //image sized2 = resize_max(im, net->w);
+        //image sized = crop_image(sized2, -((net->w - sized2.w)/2), -((net->h - sized2.h)/2), net->w, net->h);
+        //resize_network(net, sized.w, sized.h);
+        // 获得网络最后一层，在 .cfg 文件中【最后一层包含了类别的数目】.
+        layer l = net->layers[net->n-1];
+
+        // 传递给网络的数据.
+        float *X = sized.data;
+        time=what_time_is_it_now();
+        // 预测，网络前馈.
+        network_predict(net, X);
+        // 预测耗时.
+        printf("%s: Predicted in %f seconds.\n", input_img_name, what_time_is_it_now()-time);
+        
+        int nboxes = 0;
+        // 对前面网络预测出来的结果进行解析.
+        detection *dets = get_network_boxes(net,                    /* 网络结果 */
+                                            im.w, im.h,             /* 原始图片的宽，高 */
+                                            thresh, hier_thresh,    
+                                            0, 1, 
+                                            &nboxes);               /* 候选框的数目 */
+        //printf("%d\n", nboxes);
+        //if (nms) do_nms_obj(boxes, probs, l.w*l.h*l.n, l.classes, nms);
+        
+        // 非极大值抑制.
+        if (nms) do_nms_sort(dets, nboxes, l.classes, nms);
+        // 在原始图像上绘制检测结果.
+        draw_save_detections(   im,             /* 原始图像 */
+                                dets,           /* 预测结果 */
+                                nboxes,         /* 候选框数目 */
+                                thresh,         /* 置信度阈值 */
+                                names,          /* 加载的类别名称 */
+                                alphabet,       /* 用于显示的字符 */
+                                l.classes,      /* 类别 */
+                                fp);     
+        
+        free_detections(dets, nboxes);
+        
+        // NOTE 输出图片.
+        strncpy(output_file, output_folder, 256);
+        char frame_index_c3[256];
+        //sprintf(frame_index_c3,"/yolo_imgs/%04d_yolo_%.2f",img_counter,thresh);  // 0001_yolo2_0.50.txt
+        sprintf(frame_index_c3,"yolo_imgs/%s",output_file_name);  // 1905140001.223000.txt
+
+        char * result_img = strcat(output_file,frame_index_c3);
+
+        fclose(fp);
+
+        // 输出并显示检测结果.
+        if(output_folder)
+        {
+            save_image(im, result_img);
+        }
+        else
+        {
+            save_image(im, "predictions");      // 默认文件名为 predictions
+        }
+#ifdef OPENCV
+            //make_window("predictions", 500, 500, 0);
+            make_window("predictions", im.w, im.h, 0);  // wu.
+            show_image(im, "predictions", 10);           // 1：显示时间.
+#endif
+
+        free_image(im);
+        free_image(sized);
+    } // read times.txt
+	fclose(fp_rgb_txt);
+} // kitti.
 
 void test_detector( char *datacfg,      /* cfg/coco.data */
                     char *cfgfile,      /* 网络模型 */

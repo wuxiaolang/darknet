@@ -7,6 +7,7 @@
 extern void predict_classifier(char *datacfg, char *cfgfile, char *weightfile, char *filename, int top);
 extern void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filename, float thresh, float hier_thresh, char *outfile, int fullscreen);
 extern void test_detector_tum_batch(char *datacfg, char *cfgfile, char *weightfile, char *filename, char *output_folder, float thresh, float hier_thresh);
+extern void test_detector_kitti_batch(char *datacfg, char *cfgfile, char *weightfile, char *filename, char *output_folder, float thresh, float hier_thresh);
 extern void run_yolo(int argc, char **argv);
 extern void run_detector(int argc, char **argv);
 extern void run_coco(int argc, char **argv);
@@ -461,6 +462,24 @@ int main(int argc, char **argv)
         char *output_folder = (argc > 5) ? argv[5]: 0;
         // 开始处理.
         test_detector_tum_batch("cfg/coco.data", 
+                            argv[2],            /* 网络模型 */
+                            argv[3],            /* 权重文件 */
+                            filename,           /* 输入的图像路径 */
+                            output_folder,      /* 输出的图像路径 */
+                            thresh, 
+                            .5);
+    }
+    // NOTE 批量处理 kitti 数据集.
+    else if (0 == strcmp(argv[1], "detect_kitti_batch"))
+    {
+        // 读取阈值，默认为 0.5.
+        float thresh = find_float_arg(argc, argv, "-thresh", .5);
+        // @PARAM    filename   要检测的文件名.
+        char *filename = (argc > 4) ? argv[4]: 0;
+        // @PARAM    output_folder    输出的 txt 和图片保存的位置.
+        char *output_folder = (argc > 5) ? argv[5]: 0;
+        // 开始处理.
+        test_detector_kitti_batch("cfg/coco.data", 
                             argv[2],            /* 网络模型 */
                             argv[3],            /* 权重文件 */
                             filename,           /* 输入的图像路径 */
