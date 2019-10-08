@@ -813,7 +813,7 @@ void test_detector_kitti_batch(   char *datacfg,      /* cfg/coco.data */
         // strncpy(output_file_name, szTest, 12);
         // // 将时间戳转换成十进制
         // double tmp_name = strtod(output_file_name, NULL);   // note strtod() 转换成 lf 十进制类型.
-        // // 保留 5 位小数.（在 ORB_SLAM2 中 kitti 数据集小数点后 5 位）
+        // // 保留 5 位小数.
         // sprintf(output_file_name, "%.5lf", tmp_name);
 
         // NOTE 输出txt存放的文件夹.
